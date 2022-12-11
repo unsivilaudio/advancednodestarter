@@ -11,7 +11,10 @@ class BlogShow extends Component {
         if (this.props.blog.imageUrl) {
             return (
                 <img
-                    src={`https://bloggr-bucket.s3-us-west-2.amazonaws.com/${this.props.blog.imageUrl}`}
+                    alt='blog post'
+                    className='materialboxed'
+                    width='100%'
+                    src={this.props.blog.imageUrl}
                 />
             );
         }
@@ -25,7 +28,7 @@ class BlogShow extends Component {
         const { title, content } = this.props.blog;
 
         return (
-            <div>
+            <div className='section white'>
                 <h3>{title}</h3>
                 <p>{content}</p>
                 {this.renderImage()}

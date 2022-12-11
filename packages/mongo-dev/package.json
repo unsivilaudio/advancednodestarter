@@ -1,0 +1,12 @@
+{
+    "name": "mongo-dev",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "dev": "mongod --dbpath data --logpath logs/daemon.log"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC"
+}

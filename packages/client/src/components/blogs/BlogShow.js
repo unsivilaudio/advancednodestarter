@@ -1,44 +1,36 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { fetchBlog } from '../../actions';
+import React, { Component, useEffect } from 'react';
+import { connect, useSelector } from 'react-redux';
+import { useParams } from 'react-router';
+import useActions from '../../hooks/use-actions';
 
-class BlogShow extends Component {
-    componentDidMount() {
-        this.props.fetchBlog(this.props.match.params._id);
+const BlogShow = props => {
+    const params = useParams();
+    const blogData = useSelector(state => state.blog);
+    const blog = Object.values(blogData).find(b => b._id === params._id);
+    const { fetchBlog } = useActions();
+
+    useEffect(() => {
+        fetchBlog(params._id);
+    }, []);
+
+    if (!blog) {
+        return <h2>No Blog found with id.</h2>;
     }
 
-    renderImage() {
-        if (this.props.blog.imageUrl) {
-            return (
-                <img
-                    alt='blog post'
-                    className='materialboxed'
-                    width='100%'
-                    src={this.props.blog.imageUrl}
-                />
-            );
-        }
-    }
+    const { title, content } = blog;
 
-    render() {
-        if (!this.props.blog) {
-            return '';
-        }
+    return (
+        <div className='section white'>
+            <h3>{title}</h3>
+            <p>{content}</p>
+            <img
+                alt='blog post'
+                className='materialboxed'
+                width='100%'
+                src={blog.imageUrl}
+            />
+        </div>
+    );
+};
 
-        const { title, content } = this.props.blog;
-
-        return (
-            <div className='section white'>
-                <h3>{title}</h3>
-                <p>{content}</p>
-                {this.renderImage()}
-            </div>
-        );
-    }
-}
-
-function mapStateToProps({ blogs }, ownProps) {
-    return { blog: blogs[ownProps.match.params._id] };
-}
-
-export default connect(mapStateToProps, { fetchBlog })(BlogShow);
+export default BlogShow;

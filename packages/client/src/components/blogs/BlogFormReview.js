@@ -1,78 +1,58 @@
 // BlogFormReview shows users their form inputs for review
 import _ from 'lodash';
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+
 import formFields from './formFields';
-import { withRouter } from 'react-router-dom';
-import * as actions from '../../actions';
+import useActions from '../../hooks/use-actions';
 
-class BlogFormReview extends Component {
-    state = { file: null };
+const BlogFormReview = ({ onCancel, formValues }) => {
+    const navigate = useNavigate();
+    const { submitBlog } = useActions();
+    const [file, setFile] = useState(null);
 
-    renderFields() {
-        const { formValues } = this.props;
-
-        return _.map(formFields, ({ name, label }) => {
-            return (
-                <div key={name}>
-                    <label>{label}</label>
-                    <div>{formValues[name]}</div>
-                </div>
-            );
-        });
-    }
-
-    renderButtons() {
-        const { onCancel } = this.props;
-
+    const fields = _.map(formFields, ({ name, label }) => {
         return (
-            <div>
-                <button
-                    className='yellow darken-3 white-text btn-flat'
-                    onClick={onCancel}>
-                    Back
-                </button>
-                <button className='green btn-flat right white-text'>
-                    Save Blog
-                    <i className='material-icons right'>email</i>
-                </button>
+            <div key={name}>
+                <label>{label}</label>
+                <div>{formValues[name]}</div>
             </div>
         );
-    }
+    });
 
-    onSubmit(event) {
+    const buttons = (
+        <div>
+            <button
+                className='yellow darken-3 white-text btn-flat'
+                onClick={onCancel}>
+                Back
+            </button>
+            <button className='green btn-flat right white-text'>
+                Save Blog
+                <i className='material-icons right'>email</i>
+            </button>
+        </div>
+    );
+
+    function onSubmit(event) {
         event.preventDefault();
 
-        const { submitBlog, history, formValues } = this.props;
-
-        submitBlog(formValues, this.state.file, history);
+        submitBlog(formValues, file, navigate);
     }
 
-    onFileChange(e) {
-        this.setState({ file: e.target.files[0] });
+    function onFileChange(e) {
+        setFile(e.target.files[0]);
     }
 
-    render() {
-        return (
-            <form onSubmit={this.onSubmit.bind(this)}>
-                <h5>Please confirm your entries</h5>
-                {this.renderFields()}
+    return (
+        <form onSubmit={onSubmit}>
+            <h5>Please confirm your entries</h5>
+            {fields}
+            <h5>Add An Image</h5>
+            <input type='file' accept='image/*' onChange={onFileChange} />
+            {buttons}
+        </form>
+    );
+};
 
-                <h5>Add An Image</h5>
-                <input
-                    type='file'
-                    accept='image/*'
-                    onChange={this.onFileChange.bind(this)}
-                />
-
-                {this.renderButtons()}
-            </form>
-        );
-    }
-}
-
-function mapStateToProps(state) {
-    return { formValues: state.form.blogForm.values };
-}
-
-export default connect(mapStateToProps, actions)(withRouter(BlogFormReview));
+export default BlogFormReview;

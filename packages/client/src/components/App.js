@@ -1,36 +1,33 @@
-import React, { Component } from 'react';
-import { BrowserRouter, Route, Switch } from 'react-router-dom';
-import { connect } from 'react-redux';
-import * as actions from '../actions';
+import React, { useEffect } from 'react';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
+import useActions from '../hooks/use-actions';
 import Header from './Header';
 import Landing from './Landing';
 import Dashboard from './Dashboard';
 import BlogNew from './blogs/BlogNew';
 import BlogShow from './blogs/BlogShow';
 
-class App extends Component {
-  componentDidMount() {
-    this.props.fetchUser();
-  }
+function App(props) {
+    const { fetchUser } = useActions();
 
-  render() {
+    useEffect(() => {
+        fetchUser();
+    }, [fetchUser]);
+
     return (
-      <div className="container">
-        <BrowserRouter>
-          <div>
-            <Header />
-            <Switch>
-              <Route path="/blogs/new" component={BlogNew} />
-              <Route exact path="/blogs/:_id" component={BlogShow} />
-              <Route path="/blogs" component={Dashboard} />
-              <Route path="/" component={Landing} />
-            </Switch>
-          </div>
-        </BrowserRouter>
-      </div>
+        <div className='container'>
+            <BrowserRouter>
+                <Header />
+                <Routes>
+                    <Route path='/blogs/new' element={<BlogNew />} />
+                    <Route exact path='/blogs/:_id' element={<BlogShow />} />
+                    <Route path='/blogs' element={<Dashboard />} />
+                    <Route path='/' element={<Landing />} />
+                </Routes>
+            </BrowserRouter>
+        </div>
     );
-  }
 }
 
-export default connect(null, actions)(App);
+export default App;

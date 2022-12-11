@@ -1,0 +1,1 @@
+export const AUTH_FETCH_USER = 'AUTH_FETCH_USER';

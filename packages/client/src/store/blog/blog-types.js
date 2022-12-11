@@ -1,0 +1,2 @@
+export const BLOG_FETCH_BLOGS = 'BLOG_FETCH_BLOGS';
+export const BLOG_FETCH_BLOG = 'BLOG_FETCH_BLOG';

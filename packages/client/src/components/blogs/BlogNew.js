@@ -1,37 +1,25 @@
 // BlogNew shows BlogForm and BlogFormReview
-import React, { Component } from 'react';
-import { reduxForm } from 'redux-form';
+import React, { useState } from 'react';
+
 import BlogForm from './BlogForm';
 import BlogFormReview from './BlogFormReview';
 
-class BlogNew extends Component {
-  state = { showFormReview: false };
+const BlogNew = props => {
+    const [showFormReview, setShowFormReview] = useState(false);
 
-  renderContent() {
-    if (this.state.showFormReview) {
-      return (
-        <BlogFormReview
-          onCancel={() => this.setState({ showFormReview: false })}
-        />
-      );
+    let content;
+    if (showFormReview) {
+        content = (
+            <BlogFormReview
+                onCancel={() => setShowFormReview(false)}
+                formValues={showFormReview}
+            />
+        );
+    } else {
+        content = <BlogForm onBlogSubmit={setShowFormReview} />;
     }
 
-    return (
-      <BlogForm
-        onBlogSubmit={() => this.setState({ showFormReview: true })}
-      />
-    );
-  }
+    return <div>{content}</div>;
+};
 
-  render() {
-    return (
-      <div>
-        {this.renderContent()}
-      </div>
-    );
-  }
-}
-
-export default reduxForm({
-  form: 'blogForm'
-})(BlogNew);
+export default BlogNew;
